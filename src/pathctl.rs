@@ -17,14 +17,21 @@ fn display_path() {
 fn load_lines(raw_path:&str) -> Vec<String> {
     read_lines(raw_path)
         .iter() // Explicitly iterate
-        .map(|line| line.trim()) // trim() returns a &str , referencing the iterated line
-        .filter(|line| is_valid_line(line)) // line is the &str
-        .map(String::from) // because the current function owns the object, and we now only have a &str, we create a new object for returning
-        .collect::<Vec<String>>() // and finally create a vector, rather than a map . Note the "::" and the doubled '<'
+
+        // trim() returns a &str , referencing the iterated line
+        // which cannot be returned (owned and remaining in the function)
+        // so we produce a new String
+        .map(|line| String::from(line.trim()))
+
+        .filter(|line| is_valid_line(&line))
+
+        // and finally create a vector, from the map .
+        // Note the "::" and the doubled '<' for generic-in-generic
+        .collect::<Vec<String>>()
 }
 
 
-fn is_valid_line(line:&str) -> bool {
+fn is_valid_line(line:&String) -> bool {
     return line.len() > 0 && &line[0..1] != "#";
 }
 
