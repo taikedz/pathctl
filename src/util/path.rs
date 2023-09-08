@@ -1,1 +1,1 @@
-const PATHFILE_PATH:&str = "~/.PATH";
+pub const PATHFILE_PATH:&str = "~/.PATH";
