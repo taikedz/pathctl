@@ -1,8 +1,10 @@
+use super::path;
+
 use std::fs::read_to_string;
 use std::path::Path;
 
-pub fn display_path(file_path:&str) {
-    let data:Vec<String> = load_lines(file_path);
+pub fn display_path() {
+    let data:Vec<String> = load_lines(path::PATHFILE_PATH);
     let resolved_searchpath = data.join(":");
 
     println!("{resolved_searchpath}");
