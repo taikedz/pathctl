@@ -12,4 +12,4 @@ cannot find `path`.
 
 pub mod path;
 pub mod display;
-//pub mod append;
+pub mod append;
