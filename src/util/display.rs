@@ -43,9 +43,15 @@ fn read_lines(path_str: &str) -> Vec<String> {
     }
 
     // https://doc.rust-lang.org/rust-by-example/std_misc/file/read_lines.html
-    read_to_string(path_str) 
-        .unwrap()           // panic on possible file-reading errors
-        .lines()            // split the string into an iterator of string slices
-        .map(String::from)  // make each slice into a string
-        .collect()          // gather them together into a vector
+    match read_to_string(path_str) {
+        Err(e) => {
+            eprintln!("Error reading file '{}': {}", path_str, e);
+            std::process::exit(1);
+        }
+        Ok(data) => {
+            data.lines()            // split the string into an iterator of string slices
+                .map(String::from)  // make each slice into an owned string
+                .collect()          // gather them together into a vector
+        }
+    }
 }
