@@ -1,10 +1,18 @@
 # pathctl
 
+Oftentimes when I write install scripts i have to go looking for a path and its presence to avoid duplication, parsing the .bashrc and .profile scripts .
+
+This is tedious, and prone to issues.
+
+If we could have a basic utility that already took care of this as a default item in the system, it would be handy.
+
+The code is conveyed to you under the terms of the GNU _Lesser_ General Public License. It remains open-source itself, but does not require any project including it to be open source.
+
+## Learning project
+
 Based on the quick python scirpt I wrote as an idea: <https://gist.github.com/taikedz/4cda9e4650ad10fe827c1224816e0269>
 
 This is predominantly a learning project. I am at the beginning of my journey in rust, so this code is likely to be pretty janky, and potentially over-experimental.
-
-The code is conveyed to you under the terms of the GNU _Lesser_ General Public License. It remains open-source itself, but does not require any project including it to be open source.
 
 ## Building this project
 
