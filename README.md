@@ -4,6 +4,8 @@ Based on the quick python scirpt I wrote as an idea: <https://gist.github.com/ta
 
 This is predominantly a learning project. I am at the beginning of my journey in rust, so this code is likely to be pretty janky, and potentially over-experimental.
 
+The code is conveyed to you under the terms of the GNU _Lesser_ General Public License. It remains open-source itself, but does not require any project including it to be open source.
+
 ## Building this project
 
 You probably want to check the basics in [_The Book_](https://doc.rust-lang.org/book/) but in summary
