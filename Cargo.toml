@@ -1,5 +1,6 @@
 [package]
 name = "pathctl"
+# Note - it might be of interest to somehow link this with the src/version.rs file ....?
 version = "0.1.0"
 edition = "2021"
 
@@ -9,7 +10,10 @@ edition = "2021"
 shellexpand = "3.1.0"
 
 [[bin]]
+# This is the output name
 name = "pathctl"
+
+# The entry-point file for the build
 path = "src/pathctl.rs"
 
 [profile.dev]
