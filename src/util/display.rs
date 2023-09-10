@@ -4,15 +4,16 @@ use std::fs::read_to_string;
 use std::path::Path;
 
 pub fn display_path() {
-    let data:Vec<String> = load_lines(path::PATHFILE_PATH);
+    let path_str = path::get_pathfile_path();
+    let data:Vec<String> = load_lines(&path_str.as_str());
     let resolved_searchpath = data.join(":");
 
     println!("{resolved_searchpath}");
 }
 
 
-fn load_lines(raw_path:&str) -> Vec<String> {
-    read_lines(raw_path)
+fn load_lines(path_str:&str) -> Vec<String> {
+    read_lines(path_str)
         .iter() // Explicitly iterate
 
         // trim() returns a &str , referencing the iterated line
@@ -33,8 +34,7 @@ fn is_valid_line(line:&String) -> bool {
 }
 
 
-fn read_lines(raw_path: &str) -> Vec<String> {
-    let path_str = format!("{}", shellexpand::tilde(raw_path));
+fn read_lines(path_str: &str) -> Vec<String> {
     let path = Path::new(&path_str);
 
     if !path.exists() {
