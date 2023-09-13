@@ -19,6 +19,7 @@ This is predominantly a learning project. I am at the beginning of my journey in
 You probably want to check the basics in [_The Book_](https://doc.rust-lang.org/book/) but in summary
 
 * With rust and cargo installed (`sudo apt install cargo` usually will do it)
+    * or `rustup` from `snap`: `sudo snap install rustup --classic && rustup toolchain install stable && exec bash`
 * run `cargo build`
 * execute with `./target/debug/pathctl`
 
