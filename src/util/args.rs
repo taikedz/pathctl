@@ -1,4 +1,18 @@
 use std::env;
+use clap::Parser;
+
+
+/// Add or show .PATH paths
+#[derive(Parser)]
+#[command(author, version)]
+struct Args {
+    /// Base action
+    action: String,
+
+    /// Target for base action
+    #[arg(default_value_t = String::from(""))]
+    target: String,
+}
 
 
 pub struct Action {
