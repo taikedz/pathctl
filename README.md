@@ -1,36 +1,25 @@
 # pathctl
 
-Oftentimes when I write install scripts i have to go looking for a path and its presence to avoid duplication, parsing the .bashrc and .profile scripts .
+Utility to manage and query bin and install paths:
 
-This is tedious, and prone to issues.
+* use `export PATH="$(pathctl)"` (or your shell's equivalent) in `~/.profile` to populate `PATH`
+* use `pathctl bin` in a Makefile or other install script, to get the user's preferred default bin install path
+    * same for other paths of interest like `lib`, `config`, `logs`, `data`
+* use a command to add to `PATH` instead of appending to `.profile` or `.bashrc` (which is duplicate-prone)
 
-If we could have a basic utility that already took care of this as a default item in the system, it would be handy.
+## Motivation
 
-The code is conveyed to you under the terms of the GNU _Lesser_ General Public License. It remains open-source itself, but does not require any project including it to be open source.
+Path-ctl aims to provide a single utility via which to manage PATH entries - no need to tell users to manually edit their shell rc files, or try to auto-determine whether to append a new export to those files.
 
-## Learning project
-
-Based on the quick python scirpt I wrote as an idea: <https://gist.github.com/taikedz/4cda9e4650ad10fe827c1224816e0269>
-
-This is predominantly a learning project. I am at the beginning of my journey in rust, so this code is likely to be pretty janky, and potentially over-experimental.
+Path-ctl aims to provide a query tool that any install script can invoke to discover the user's preferred default location, instead of providing an unsuitable default like `/usr/local/bin` or `~/.local/bin`.
 
 ## Building this project
 
-You probably want to check the basics in [_The Book_](https://doc.rust-lang.org/book/) but in summary
+TBC
 
-* With rust and cargo installed (`sudo apt install cargo` usually will do it)
-* run `cargo build`
-* execute with `./target/debug/pathctl`
+## License
 
-This _should_ be a fully finalized copy of the program, as set out by the specification below.
-
-In the `Cargo.toml` I explicitly chose to strip the debug symbols form the build - this reduces the file's size from 12MB to 400K . An impressive difference...
-
-## Next steps
-
-
-Look into unit testing libraries and practices.
-
+The code is conveyed to you under the terms of the GNU _Lesser_ General Public License. It remains open-source itself, but does not require any project including it to be open source.
 
 ## Requirements
 
