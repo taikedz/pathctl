@@ -33,3 +33,7 @@ I had set myself out a set of requirements to keep me focused:
 * any other argument form causes help to be printed, and exits with error code
 * any error should cause print out of error message, without printing stack traces or other debugging noise
 
+* `pathctl add DIR_PATH` will not add `DIR_PATH` if it is already present in the `~/.PATH` file
+* `./.PATH` file contains local paths which are loaded during `pathctl load`
+* command recognises itself as the command `p-env`
+* Special form takes arguments `p-env {TOKENS ...}` which launches the remainder of the arguments as a command, resolving the first token from the loaded path as a command
