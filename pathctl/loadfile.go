@@ -23,7 +23,7 @@ func LoadPathFile() ([]string, *PathConfig, ErrorExit) {
 	path := filepath.Join(curuser.HomeDir, ".PATH")
 	lines, err := ReadLines(path)
 	if err != nil {
-		return nil, nil, ErrorAction{ERR_PATHFILE_FAIL, fmt.Sprintf("ERROR: %v", err)}
+		return nil, nil, ErrorAction{ERR_PATHFILE_FAIL, fmt.Sprintf("Pathctl: %v", err)}
 	}
 
 	return parsePathFile(lines)

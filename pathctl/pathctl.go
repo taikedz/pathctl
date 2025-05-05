@@ -59,12 +59,7 @@ func printRequestedSection(section string, config *PathConfig) {
 
 func sectionValue(value, defaultval string) bool {
 	if value == "" {
-		// if root, print defaultval
-		u, e := user.Current()
-		if e != nil {
-			ErrorAction{ERR_SYSTEM, "Fatal - Could not get current user!"}.Exit()
-		}
-		if u.Uid == "0" { // posix only, but this is a posix tool, so OK
+		if IsRootUser() {
 			fmt.Print(defaultval)
 			return true
 		}
@@ -73,4 +68,12 @@ func sectionValue(value, defaultval string) bool {
 
 	fmt.Print(value)
 	return true
+}
+
+func IsRootUser() bool {
+	u, e := user.Current()
+	if e != nil {
+		ErrorAction{ERR_SYSTEM, "Fatal - Could not get current user!"}.Exit()
+	}
+	return u.Uid == "0" // posix only, but this is a posix tool, so OK
 }
