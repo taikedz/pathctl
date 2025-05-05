@@ -2,20 +2,19 @@ package pathctl
 
 import (
 	"fmt"
-	"os"
 	"strings"
-	"bufio"
 )
 
 type PathConfig struct {
 	bin string
-	logs string
+	log string
 	config string
 	data string
+	lib string
 }
 
-func loadPathFile() string[], *PathConfig, ErrorExit {
-	lines, err := readlines("~/.PATH")
+func LoadPathFile() ([]string, *PathConfig, ErrorExit) {
+	lines, err := ReadLines("~/.PATH")
 	if err != nil {
 		return nil, nil, ErrorAction{ERR_PATHFILE_FAIL, fmt.Sprintf("ERROR: %v", err)}
 	}
@@ -23,7 +22,7 @@ func loadPathFile() string[], *PathConfig, ErrorExit {
 	return parsePathFile(lines)
 }
 
-func parsePathfile(lines []string) string[], *PathConfig, ErrorExit {
+func parsePathFile(lines []string) ([]string, *PathConfig, ErrorExit) {
 
 	config := PathConfig{}
 	var paths []string
@@ -39,10 +38,10 @@ func parsePathfile(lines []string) string[], *PathConfig, ErrorExit {
 		if path == "" {
 			return nil, nil, ErrorAction{ERR_NOPATH, fmt.Sprintf("Unspecified path on line %d of ~/.PATH", lineno)}
 		}
-		if strings.Index(path, ":") {
+		if strings.Index(path, ":") >= 0 {
 			return nil, nil, ErrorAction{ERR_INVALID_PATH, fmt.Sprintf("Path cannot contain ':' , got '%s'", path)}
 		}
-		if section != nil {
+		if section != "" {
 			if !in_head {
 				return nil, nil, ErrorAction{ERR_HEADS_BEYOND_HEADS, "Cannot specify a section beyond top of .PATH file"}
 			}
@@ -54,15 +53,14 @@ func parsePathfile(lines []string) string[], *PathConfig, ErrorExit {
 				config.config = path
 			case "data":
 				config.data = path
-			case "logs":
-				config.logs = path
+			case "log":
+				config.log = path
 			case "lib":
 				config.lib = path
 			default:
 				return nil, nil, ErrorAction{ERR_BAD_SECTION, fmt.Sprintf("Unknown section: %s", section)}
 			}
-		}
-		else {
+		} else {
 			in_head = false
 			paths = append(paths, path)
 		}
@@ -76,11 +74,11 @@ func isBlankOrCommentLine(line string) bool {
 	return line == "" || strings.Index(line, "#") == 0
 }
 
-func extractTokens(line string) string, string {
-	if line.Index("%") == 0 && line.Index("=") > 1 {
+func extractTokens(line string) (string, string) {
+	if strings.Index(line,"%") == 0 && strings.Index(line,"=") > 1 {
 		tokens := strings.SplitN(line, "=", 2)
 		return tokens[0][1:], tokens[1]
 	} else {
-		return nil, line
+		return "", line
 	}
 }
