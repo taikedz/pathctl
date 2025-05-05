@@ -3,8 +3,6 @@ package pathctl
 import (
 	"fmt"
 	"strings"
-	"os/user"
-	"path/filepath"
 )
 
 type PathConfig struct {
@@ -16,14 +14,13 @@ type PathConfig struct {
 }
 
 func LoadPathFile() ([]string, *PathConfig, ErrorExit) {
-	curuser, err := user.Current()
+	path, err := HomePath("~/.PATH")
 	if err != nil {
 		return nil, nil, ErrorAction{ERR_SYSTEM, err.Error()}
 	}
-	path := filepath.Join(curuser.HomeDir, ".PATH")
-	lines, err := ReadLines(path)
-	if err != nil {
-		return nil, nil, ErrorAction{ERR_PATHFILE_FAIL, fmt.Sprintf("Pathctl: %v", err)}
+	lines, rerr := ReadLines(path)
+	if rerr != nil {
+		return nil, nil, ErrorAction{ERR_PATHFILE_FAIL, fmt.Sprintf("Pathctl: %v", rerr)}
 	}
 
 	return parsePathFile(lines)
@@ -48,9 +45,12 @@ func parsePathFile(lines []string) ([]string, *PathConfig, ErrorExit) {
 		if strings.Index(path, ":") >= 0 {
 			return nil, nil, ErrorAction{ERR_INVALID_PATH, fmt.Sprintf("Path cannot contain ':' , got '%s'", path)}
 		}
+
+		path = BestPath(path)
+
 		if section != "" {
 			if !in_head {
-				return nil, nil, ErrorAction{ERR_HEADS_BEYOND_HEADS, "Cannot specify a section beyond top of .PATH file"}
+				return nil, nil, ErrorAction{ERR_HEADS_BEYOND_HEADS, fmt.Sprintf("Line %d: Cannot specify a section beyond top of .PATH file: '%s'", lineno, line)}
 			}
 
 			switch(section) {

@@ -45,3 +45,5 @@ Preference subcommands as follows. If a section is not defined, nothing is print
 * `pathctl bin` - prints the user's preferred `bin` directory ; root default is `/usr/local/bin`
 * `pathctl lib` - prints the user's preferred libs directory; root default is `/usr/local/lib`
 * `pathctl data` - prints the user's preferred data directory; root default is `/usr/local/share`
+
+Each section can be declared at the top of the `.PATH` file as `%<section>=<path>` like `%config=~/.config`

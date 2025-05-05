@@ -3,34 +3,66 @@ package pathctl
 import (
 	"os"
 	"fmt"
+	"errors"
 	"strings"
 	"os/user"
 )
 
 const NAME string = "Pathctl"
-const VERSION string = "0.0.1"
+const VERSION string = "0.0.2"
 
 func Main() {
 	switch len(os.Args) {
 	case 1:
-		paths, _, err := LoadPathFile()
-		if err != nil {
-			err.Exit()
-		}
+		paths, _ := pathsAndConfigs()
 		fmt.Print(strings.Join(paths, ":"))
 	case 2:
-		if os.Args[1] == "version" {
+		switch os.Args[1] {
+		case "version":
 			fmt.Printf("%s v%s\n", NAME, VERSION)
-		} else {
-			_, config, err := LoadPathFile()
-			if err != nil {
-				err.Exit()
-			}
+		default:
+			_, config := pathsAndConfigs()
 			printRequestedSection(os.Args[1], config)
+		}
+	case 3:
+		paths, _ := pathsAndConfigs()
+
+		switch os.Args[1] {
+		case "has":
+			if pathsHave(os.Args[2], paths) {
+				os.Exit(0)
+			} else {
+				os.Exit(ERR_NO)
+			}
+		default:
+			ErrorAction{ERR_CMD, "Unsupported subcommand"}.Exit()
 		}
 	default:
 		print("Oops!\n")
 	}
+}
+
+func pathExists(target string) bool {
+	_, err := os.Stat(target)
+	if err == nil {
+		return true
+	}
+	if errors.Is(err, os.ErrNotExist) {
+		return false
+	} else {
+		// we cannot know whether the item exists
+		// https://stackoverflow.com/a/12518877/2703818
+		ErrorAction{ERR_SYSTEM, err.Error()}.Exit()
+	}
+	return false
+}
+
+func pathsAndConfigs() ([]string, *PathConfig) {
+	paths, config, err := LoadPathFile()
+	if err != nil {
+		err.Exit()
+	}
+	return paths, config
 }
 
 
