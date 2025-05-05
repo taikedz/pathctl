@@ -18,7 +18,7 @@ Commands
 ========
 
 {{.cmd}}
-	Print PATH string, joinging paths from ~/.PATH
+	Print PATH string, joining paths from ~/.PATH
 
 {{.cmd}} bin
 	Print the user's preferred path for installing executables
