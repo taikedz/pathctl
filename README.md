@@ -2,7 +2,7 @@
 
 Utility to manage and query bin and install paths:
 
-* use `export PATH="$(pathctl)"` (or your shell's equivalent) in `~/.profile` to populate `PATH`
+* use `export PATH="$PATH:$(pathctl)"` (or your shell's equivalent) in `~/.profile` to populate `PATH`
 * use `pathctl bin` in a Makefile or other install script, to get the user's preferred default bin install path
     * same for other paths of interest like `lib`, `config`, `log`, `data`
 * use a command to add to `PATH` instead of appending to `.profile` or `.bashrc` (which is duplicate-prone)
