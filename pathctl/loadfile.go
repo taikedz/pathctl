@@ -3,6 +3,8 @@ package pathctl
 import (
 	"fmt"
 	"strings"
+	"os/user"
+	"path/filepath"
 )
 
 type PathConfig struct {
@@ -14,7 +16,12 @@ type PathConfig struct {
 }
 
 func LoadPathFile() ([]string, *PathConfig, ErrorExit) {
-	lines, err := ReadLines("~/.PATH")
+	curuser, err := user.Current()
+	if err != nil {
+		return nil, nil, ErrorAction{ERR_SYSTEM, err.Error()}
+	}
+	path := filepath.Join(curuser.HomeDir, ".PATH")
+	lines, err := ReadLines(path)
 	if err != nil {
 		return nil, nil, ErrorAction{ERR_PATHFILE_FAIL, fmt.Sprintf("ERROR: %v", err)}
 	}

@@ -12,15 +12,15 @@ const VERSION string = "0.0.1"
 
 func Main() {
 	switch len(os.Args) {
-	case 0:
+	case 1:
 		paths, _, err := LoadPathFile()
 		if err != nil {
 			err.Exit()
 		}
-		print(strings.Join(paths, ":"))
-	case 1:
+		fmt.Print(strings.Join(paths, ":"))
+	case 2:
 		if os.Args[1] == "version" {
-			fmt.Printf("%s v%s", NAME, VERSION)
+			fmt.Printf("%s v%s\n", NAME, VERSION)
 		} else {
 			_, config, err := LoadPathFile()
 			if err != nil {
@@ -65,12 +65,12 @@ func sectionValue(value, defaultval string) bool {
 			ErrorAction{ERR_SYSTEM, "Fatal - Could not get current user!"}.Exit()
 		}
 		if u.Uid == "0" { // posix only, but this is a posix tool, so OK
-			print(defaultval)
+			fmt.Print(defaultval)
 			return true
 		}
 		return false
 	}
 
-	print(value)
+	fmt.Print(value)
 	return true
 }

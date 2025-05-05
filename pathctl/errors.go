@@ -20,7 +20,7 @@ func (e ErrorAction) Error() string {
 }
 
 func (e ErrorAction) Exit() {
-	fmt.Printf("%s\n", e.info)
+	fmt.Fprintf(os.Stderr, "%s\n", e.info)
 	os.Exit(e.code)
 }
 
