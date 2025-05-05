@@ -17,7 +17,9 @@ The plain `pathctl` command prints a `PATH` search path string from all location
 
 ## Building this project
 
-TBC
+You need the go toolchain to build this utility.
+
+Run `./build.sh`, a `bin/pathctl` will be built.
 
 ## License
 
