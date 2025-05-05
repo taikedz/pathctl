@@ -3,15 +3,16 @@ package pathctl
 import (
 	"os"
 	"fmt"
-	"errors"
 	"strings"
 	"os/user"
 )
 
-const NAME string = "Pathctl"
-const VERSION string = "0.0.2"
-
 func Main() {
+	if len(os.Args) > 1 && os.Args[1] == "help" {
+		PrintHelp()
+		os.Exit(0)
+	}
+
 	switch len(os.Args) {
 	case 1:
 		paths, _ := pathsAndConfigs()
@@ -35,26 +36,11 @@ func Main() {
 				os.Exit(ERR_NO)
 			}
 		default:
-			ErrorAction{ERR_CMD, "Unsupported subcommand"}.Exit()
+			JustFail("Unsupported subcommand")
 		}
 	default:
-		print("Oops!\n")
+		JustFail("Too many arguments")
 	}
-}
-
-func pathExists(target string) bool {
-	_, err := os.Stat(target)
-	if err == nil {
-		return true
-	}
-	if errors.Is(err, os.ErrNotExist) {
-		return false
-	} else {
-		// we cannot know whether the item exists
-		// https://stackoverflow.com/a/12518877/2703818
-		ErrorAction{ERR_SYSTEM, err.Error()}.Exit()
-	}
-	return false
 }
 
 func pathsAndConfigs() ([]string, *PathConfig) {
@@ -65,47 +51,39 @@ func pathsAndConfigs() ([]string, *PathConfig) {
 	return paths, config
 }
 
-
 func printRequestedSection(section string, config *PathConfig) {
-	printed := false
-
 	switch section {
 	case "bin":
-		printed = sectionValue(config.bin, "/usr/local/bin")
+		sectionValue(section, config.bin, "/usr/local/bin")
 	case "lib":
-		printed = sectionValue(config.lib, "/usr/local/lib")
+		sectionValue(section, config.lib, "/usr/local/lib")
 	case "log":
-		printed = sectionValue(config.log, "/var/log")
+		sectionValue(section, config.log, "/var/log")
 	case "data":
-		printed = sectionValue(config.data, "/usr/local/share")
+		sectionValue(section, config.data, "/usr/local/share")
 	case "config":
-		printed = sectionValue(config.config, "/etc")
+		sectionValue(section, config.config, "/etc")
 	default:
-		ErrorAction{ERR_BAD_USER_SECTION, fmt.Sprintf("Cannot lookup section %s", section)}.Exit()
-	}
-
-	if !printed {
-		ErrorAction{1, fmt.Sprintf("%s undefined", section)}.Exit()
+		JustFail(fmt.Sprintf("Cannot lookup section '%s'", section))
 	}
 }
 
-func sectionValue(value, defaultval string) bool {
+func sectionValue(section, value, root_default string) {
 	if value == "" {
 		if IsRootUser() {
-			fmt.Print(defaultval)
-			return true
+			fmt.Print(root_default)
+			return
 		}
-		return false
+		JustFail(fmt.Sprintf("%s undefined", section))
 	}
 
 	fmt.Print(value)
-	return true
 }
 
 func IsRootUser() bool {
 	u, e := user.Current()
 	if e != nil {
-		ErrorAction{ERR_SYSTEM, "Fatal - Could not get current user!"}.Exit()
+		JustFail("Fatal - Could not get current user!")
 	}
 	return u.Uid == "0" // posix only, but this is a posix tool, so OK
 }

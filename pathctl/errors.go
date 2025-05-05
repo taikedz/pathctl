@@ -24,6 +24,17 @@ func (e ErrorAction) Exit() {
 	os.Exit(e.code)
 }
 
+func AbortIfError(err error, code int) {
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "ERROR: %v\n", err)
+		os.Exit(code)
+	}
+}
+
+func JustFail(message string) {
+	ErrorAction{ERR_CMD, fmt.Sprintf("%s. Try 'help' command.", message)}.Exit()
+}
+
 const ERR_NO int = 1
 
 const ERR_PATHFILE_FAIL int = 10

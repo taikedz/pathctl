@@ -1,6 +1,8 @@
 package pathctl
 
 import (
+	"os"
+	"errors"
 	"strings"
 	"os/user"
 	"path/filepath"
@@ -56,6 +58,21 @@ func pathsHave(target string, paths []string) bool {
 		if target == item {
 			return true
 		}
+	}
+	return false
+}
+
+func pathExists(target string) bool {
+	_, err := os.Stat(target)
+	if err == nil {
+		return true
+	}
+	if errors.Is(err, os.ErrNotExist) {
+		return false
+	} else {
+		// we cannot know whether the item exists
+		// https://stackoverflow.com/a/12518877/2703818
+		ErrorAction{ERR_SYSTEM, err.Error()}.Exit()
 	}
 	return false
 }
