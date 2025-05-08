@@ -23,10 +23,10 @@ func LoadPathFile() ([]string, *PathConfig, ErrorExit) {
 		return nil, nil, ErrorAction{ERR_PATHFILE_FAIL, fmt.Sprintf("Pathctl: %v", rerr)}
 	}
 
-	return parsePathFile(lines)
+	return ParsePathFile(lines)
 }
 
-func parsePathFile(lines []string) ([]string, *PathConfig, ErrorExit) {
+func ParsePathFile(lines []string) ([]string, *PathConfig, ErrorExit) {
 
 	config := PathConfig{}
 	var paths []string
