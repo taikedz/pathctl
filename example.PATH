@@ -1,0 +1,19 @@
+# Example `~/.PATH` file
+
+# User-declared preferred locations
+%bin=~/.local/bin
+%config=~/.local/etc
+%lib=~/.local/lib
+%data=~/.local/var
+%log=~/.local/log
+
+# ---- Common paths:
+
+# This tool's author's preferred location - hence its declaration above
+~/.local/bin
+
+# A common location some tools will throw things into by default
+~/bin
+
+# The go tool chain newarly always lives here
+~/go/bin
