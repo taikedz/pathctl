@@ -1,10 +1,12 @@
 package main
 
 import (
-	"github.com/taikedz/pathctl/pathctl"
 	"os"
+	"os/user"
 	"fmt"
 	"strings"
+
+	"github.com/taikedz/pathctl/pathctl"
 )
 
 // This go project can be used as a library. These are the exported functions.
@@ -51,6 +53,10 @@ func PathsHave(target string, paths []string) bool {
 // ========================================
 // Non-library functions. Place exported functions above.
 
+func justFail(message string) {
+	pathctl.NewErrorAction(pathctl.ERR_CMD, fmt.Sprintf("%s. Try 'help' command.", message) ).Exit()
+}
+
 func main() {
 	if len(os.Args) > 1 && os.Args[1] == "help" {
 		pathctl.PrintHelp()
@@ -80,10 +86,10 @@ func main() {
 				os.Exit(pathctl.ERR_NO)
 			}
 		default:
-			pathctl.JustFail("Unsupported subcommand")
+			justFail("Unsupported subcommand")
 		}
 	default:
-		pathctl.JustFail("Too many arguments")
+		justFail("Too many arguments")
 	}
 }
 
@@ -121,18 +127,26 @@ func printRequestedSection(section string, config *pathctl.PathConfig) {
 	case "config":
 		sectionValue(section, config.Config, "/etc")
 	default:
-		pathctl.JustFail(fmt.Sprintf("Section '%s' invalid", section))
+		justFail(fmt.Sprintf("Section '%s' invalid", section))
 	}
 }
 
 func sectionValue(section, value, root_default string) {
 	if value == "" {
-		if pathctl.IsRootUser() {
+		if isRootUser() {
 			fmt.Print(root_default)
 			return
 		}
-		pathctl.JustFail(fmt.Sprintf("Section '%s' not defined in ~/.PATH", section))
+		justFail(fmt.Sprintf("Section '%s' not defined in ~/.PATH", section))
 	}
 
 	fmt.Print(value)
+}
+
+func isRootUser() bool {
+	u, e := user.Current()
+	if e != nil {
+		justFail("Fatal - Could not get current user!")
+	}
+	return u.Uid == "0" // posix only, but this is a posix tool, so OK
 }

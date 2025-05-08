@@ -35,10 +35,6 @@ func AbortIfError(err error, code int) {
 	}
 }
 
-func JustFail(message string) {
-	ErrorAction{ERR_CMD, fmt.Sprintf("%s. Try 'help' command.", message)}.Exit()
-}
-
 const ERR_NO int = 1
 
 const ERR_PATHFILE_FAIL int = 10
