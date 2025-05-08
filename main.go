@@ -2,7 +2,6 @@ package main
 
 import (
 	"os"
-	"os/user"
 	"fmt"
 	"strings"
 
@@ -76,7 +75,7 @@ func main() {
 			printRequestedSection(os.Args[1], config)
 		}
 	case 3:
-		paths, _ := pathsAndConfigs()
+		paths, config := pathsAndConfigs()
 
 		switch os.Args[1] {
 		case "has":
@@ -85,6 +84,8 @@ func main() {
 			} else {
 				os.Exit(libpctl.ERR_NO)
 			}
+		case "install":
+			addBinFile(os.Args[2], config.Bin)
 		default:
 			justFail("Unsupported subcommand")
 		}
@@ -114,7 +115,7 @@ func pathsAndConfigs() ([]string, *libpctl.PathConfig) {
 	return paths, config
 }
 
-func printRequestedSection(section string, config *libpctl.PathConfig) {
+func printRequestedSection(section string, config *libpctl.PathConfig) { // FIXME: RESOLVE IN PathConfig !!
 	switch section {
 	case "bin":
 		sectionValue(section, config.Bin, "/usr/local/bin")
@@ -133,7 +134,7 @@ func printRequestedSection(section string, config *libpctl.PathConfig) {
 
 func sectionValue(section, value, root_default string) {
 	if value == "" {
-		if isRootUser() {
+		if os.Getuid() == 0 { // POSIX only, and since this is a posix tool, fine as it is.
 			fmt.Print(root_default)
 			return
 		}
@@ -143,10 +144,14 @@ func sectionValue(section, value, root_default string) {
 	fmt.Print(value)
 }
 
-func isRootUser() bool {
-	u, e := user.Current()
-	if e != nil {
-		justFail("Fatal - Could not get current user!")
+func addBinFile(filepath string, destdir string) {
+	if ! libpctl.PathExists(filepath) {
+		libpctl.NewErrorAction(
+			libpctl.ERR_FAIL_FIND,
+			fmt.Sprintf("Could not find file '%s'", filepath),
+		).Exit()
 	}
-	return u.Uid == "0" // posix only, but this is a posix tool, so OK
+
+	destpath := path.Join(BestPath(destdir), filepath.File(filepath).Name()) // TODO
+	libpctl.FileCopy(filepath, destpath)
 }

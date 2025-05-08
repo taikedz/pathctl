@@ -36,7 +36,7 @@ func BestPath(target string) string {
 		target = path
 	}
 
-	if ! pathExists(target) {
+	if ! PathExists(target) {
 		// The path location listed in .PATH does not (yet) exist
 		// We do not need it to exist, only to resolve it as far as possible
 		return target
@@ -51,7 +51,7 @@ func BestPath(target string) string {
 	return end_target
 }
 
-func pathExists(target string) bool {
+func PathExists(target string) bool {
 	_, err := os.Stat(target)
 	if err == nil {
 		return true
