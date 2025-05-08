@@ -10,6 +10,10 @@ type ErrorExit interface {
 	Exit()
 }
 
+func NewErrorAction(code int, info string) ErrorAction {
+	return ErrorAction{code, info}
+}
+
 type ErrorAction struct {
 	code int
 	info string

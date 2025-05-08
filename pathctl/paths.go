@@ -51,17 +51,6 @@ func BestPath(target string) string {
 	return end_target
 }
 
-func pathsHave(target string, paths []string) bool {
-	target = BestPath(target)
-	for _, item := range paths {
-		item = BestPath(item)
-		if target == item {
-			return true
-		}
-	}
-	return false
-}
-
 func pathExists(target string) bool {
 	_, err := os.Stat(target)
 	if err == nil {

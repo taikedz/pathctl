@@ -6,24 +6,11 @@ import (
 )
 
 type PathConfig struct {
-	bin string
-	log string
-	config string
-	data string
-	lib string
-}
-
-func LoadPathFile() ([]string, *PathConfig, ErrorExit) {
-	path, err := HomePath("~/.PATH")
-	if err != nil {
-		return nil, nil, ErrorAction{ERR_SYSTEM, err.Error()}
-	}
-	lines, rerr := ReadLines(path)
-	if rerr != nil {
-		return nil, nil, ErrorAction{ERR_PATHFILE_FAIL, fmt.Sprintf("Pathctl: %v", rerr)}
-	}
-
-	return ParsePathFile(lines)
+	Bin string
+	Log string
+	Config string
+	Data string
+	Lib string
 }
 
 func ParsePathFile(lines []string) ([]string, *PathConfig, ErrorExit) {
@@ -34,7 +21,8 @@ func ParsePathFile(lines []string) ([]string, *PathConfig, ErrorExit) {
 	in_head := true
 
 	for lineno, line := range lines {
-		if isBlankOrCommentLine(line) {
+		line = strings.Trim(line, " \t")
+		if line == "" || strings.Index(line, "#") == 0 {
 			continue
 		}
 
@@ -55,15 +43,15 @@ func ParsePathFile(lines []string) ([]string, *PathConfig, ErrorExit) {
 
 			switch(section) {
 			case "bin":
-				config.bin = path
+				config.Bin = path
 			case "config":
-				config.config = path
+				config.Config = path
 			case "data":
-				config.data = path
+				config.Data = path
 			case "log":
-				config.log = path
+				config.Log = path
 			case "lib":
-				config.lib = path
+				config.Lib = path
 			default:
 				return nil, nil, ErrorAction{ERR_BAD_SECTION, fmt.Sprintf("Unknown section: %s", section)}
 			}
@@ -74,11 +62,6 @@ func ParsePathFile(lines []string) ([]string, *PathConfig, ErrorExit) {
 	}
 
 	return paths, &config, nil
-}
-
-func isBlankOrCommentLine(line string) bool {
-	line = strings.Trim(line, " \t")
-	return line == "" || strings.Index(line, "#") == 0
 }
 
 func extractTokens(line string) (string, string) {
