@@ -20,7 +20,20 @@ The plain `pathctl` command prints a `PATH` search path string from all location
 
 You need the go toolchain to build this utility.
 
-Run `./build.sh`, a `bin/pathctl` will be built.
+Run `./build.sh`, a `bin/pathctl` will be built. Alternatively run
+
+```sh
+go build -o bin/pathctl main.go
+```
+
+## As a library
+
+For go projects, you can use this as a library. Import `github.com/taikedz/pathctl` and use one of the two helper functions:
+
+* `GetUserPaths() ([]string, *libpctl.PathConfig, error)` - to load the plain `.PATH` data
+* `PathsHave(target string, paths []string) bool` - to check for path existence, using resolved paths
+
+Remember to `go mod tidy` before first run after import.
 
 ## Installation
 
