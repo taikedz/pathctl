@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/taikedz/pathctl/pathctl"
+	"github.com/taikedz/pathctl/libpctl"
 )
 
 // This go project can be used as a library. These are the exported functions.
@@ -20,7 +20,7 @@ Returns:
 * error : an error, if any
 
 */
-func GetUserPaths() ([]string, *pathctl.PathConfig, error) {
+func GetUserPaths() ([]string, *libpctl.PathConfig, error) {
 	return loadPathFile()
 }
 
@@ -40,9 +40,9 @@ Returns:
 * bool : whether the target was found amongst the list of paths
 */
 func PathsHave(target string, paths []string) bool {
-	target = pathctl.BestPath(target)
+	target = libpctl.BestPath(target)
 	for _, item := range paths {
-		item = pathctl.BestPath(item)
+		item = libpctl.BestPath(item)
 		if target == item {
 			return true
 		}
@@ -54,12 +54,12 @@ func PathsHave(target string, paths []string) bool {
 // Non-library functions. Place exported functions above.
 
 func justFail(message string) {
-	pathctl.NewErrorAction(pathctl.ERR_CMD, fmt.Sprintf("%s. Try 'help' command.", message) ).Exit()
+	libpctl.NewErrorAction(libpctl.ERR_CMD, fmt.Sprintf("%s. Try 'help' command.", message) ).Exit()
 }
 
 func main() {
 	if len(os.Args) > 1 && os.Args[1] == "help" {
-		pathctl.PrintHelp()
+		libpctl.PrintHelp()
 		os.Exit(0)
 	}
 
@@ -70,7 +70,7 @@ func main() {
 	case 2:
 		switch os.Args[1] {
 		case "version":
-			fmt.Printf("%s v%s\n", pathctl.NAME, pathctl.VERSION)
+			fmt.Printf("%s v%s\n", libpctl.NAME, libpctl.VERSION)
 		default:
 			_, config := pathsAndConfigs()
 			printRequestedSection(os.Args[1], config)
@@ -83,7 +83,7 @@ func main() {
 			if PathsHave(os.Args[2], paths) {
 				os.Exit(0)
 			} else {
-				os.Exit(pathctl.ERR_NO)
+				os.Exit(libpctl.ERR_NO)
 			}
 		default:
 			justFail("Unsupported subcommand")
@@ -93,20 +93,20 @@ func main() {
 	}
 }
 
-func loadPathFile() ([]string, *pathctl.PathConfig, pathctl.ErrorExit) {
-	path, err := pathctl.HomePath("~/.PATH")
+func loadPathFile() ([]string, *libpctl.PathConfig, libpctl.ErrorExit) {
+	path, err := libpctl.HomePath("~/.PATH")
 	if err != nil {
-		return nil, nil, pathctl.NewErrorAction(pathctl.ERR_SYSTEM, err.Error() )
+		return nil, nil, libpctl.NewErrorAction(libpctl.ERR_SYSTEM, err.Error() )
 	}
-	lines, rerr := pathctl.ReadLines(path)
+	lines, rerr := libpctl.ReadLines(path)
 	if rerr != nil {
-		return nil, nil, pathctl.NewErrorAction(pathctl.ERR_PATHFILE_FAIL, fmt.Sprintf("Pathctl: %v", rerr) )
+		return nil, nil, libpctl.NewErrorAction(libpctl.ERR_PATHFILE_FAIL, fmt.Sprintf("Pathctl: %v", rerr) )
 	}
 
-	return pathctl.ParsePathFile(lines)
+	return libpctl.ParsePathFile(lines)
 }
 
-func pathsAndConfigs() ([]string, *pathctl.PathConfig) {
+func pathsAndConfigs() ([]string, *libpctl.PathConfig) {
 	paths, config, err := loadPathFile()
 	if err != nil {
 		err.Exit()
@@ -114,7 +114,7 @@ func pathsAndConfigs() ([]string, *pathctl.PathConfig) {
 	return paths, config
 }
 
-func printRequestedSection(section string, config *pathctl.PathConfig) {
+func printRequestedSection(section string, config *libpctl.PathConfig) {
 	switch section {
 	case "bin":
 		sectionValue(section, config.Bin, "/usr/local/bin")
