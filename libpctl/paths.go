@@ -1,4 +1,4 @@
-package pathctl
+package libpctl
 
 import (
 	"os"
