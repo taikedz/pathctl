@@ -4,13 +4,14 @@ Utility to manage and query bin and install paths:
 
 * use `export PATH="$(pathctl):$PATH"` (or your shell's equivalent) in `~/.profile` to populate `PATH`
 * use `pathctl bin` in a Makefile or other install script, to get the user's preferred default bin install path
+    * for example `bindir="$(pathctl bin)" || exit 1; cp build/bin/myprogram "$bindir"`
     * same for other paths of interest like `lib`, `config`, `log`, `data`
 
 ## Motivation
 
-The problem: different developers favour different locations for placing files, and whilst there are general conventions, there are several. Binaries placed in arbitrary folders directly under the home folder, configurations placed in `~/.*rc` files, some configs placed directly in home, some under `~/.config`, some like go just creating a `~/go/bin` and `~/go/pkg` ... The home folder gets litteered, and it is never clear where files are going to end up.
+The problem: different developers favour different locations for placing files, and whilst there are general conventions, there are indeed several. Binaries placed in arbitrary folders directly under the home folder, configurations placed in `~/.*rc` files, some configs placed directly in home, some under `~/.config`, some like go just creating a `~/go/bin` and `~/go/pkg` ... The home folder gets littered, and it is never clear where files are going to end up.
 
-Pathctl aims to provide a single utility via which to manage PATH entries and common locations - no need to tell users to manually edit their shell rc files, or try to auto-determine whether to append a new `export PATH=...` to those files.
+Pathctl aims to provide an example utility/technique of a single utility via which to manage PATH entries and common locations - no need to tell users to manually edit their shell rc files, or try to auto-determine whether to append a new `export PATH=...` to those files.
 
 Pathctl aims to provide a query tool that any install script can invoke to discover the user's preferred default location, instead of providing an unsuitable default like `/usr/local/bin` or `~/.local/bin`.
 

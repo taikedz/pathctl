@@ -20,5 +20,5 @@ fi
 ## Actual usage example assuming pathctl is available - like in your own scripts
 ##
 
-INSTALL_DIR="$(pathctl bin)"
+INSTALL_DIR="$(pathctl bin || echo "$HOME/bin")"
 cp bin/pathctl "$INSTALL_DIR/"
