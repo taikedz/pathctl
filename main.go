@@ -4,6 +4,7 @@ import (
 	"os"
 	"fmt"
 	"strings"
+	"path/filepath"
 
 	"github.com/taikedz/pathctl/libpctl"
 )
@@ -152,6 +153,6 @@ func addBinFile(filepath string, destdir string) {
 		).Exit()
 	}
 
-	destpath := path.Join(BestPath(destdir), filepath.File(filepath).Name()) // TODO
+	destpath := filepath.Join(libpctl.BestPath(destdir), filepath.File(filepath).Name()) // TODO
 	libpctl.FileCopy(filepath, destpath)
 }
