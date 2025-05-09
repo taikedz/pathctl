@@ -3,7 +3,8 @@ package putest
 import (
 	"testing"
 
-	"github.com/taikedz/pathctl/pathctl"
+	"github.com/taikedz/pathctl/libpctl"
+	"github.com/taikedz/gocheck"
 )
 
 func Test_ParsePathFile(t *testing.T) {
@@ -16,13 +17,13 @@ func Test_ParsePathFile(t *testing.T) {
 		"/tmp/alt/bin",
 	}
 
-	if paths, pconfig, err := pathctl.ParsePathFile(lines); err != nil {
+	if paths, pconfig, err := libpctl.ParsePathFile(lines); err != nil {
 		t.Errorf("Failed to parse: %v", err)
 	} else {
-		CheckEqual(t, "/tmp/bin", pconfig.Bin)
-		CheckEqual(t, "/tmp/etc", pconfig.Config)
-		CheckEqual(t, "", pconfig.Lib)
+		gocheck.Equal(t, "/tmp/bin", pconfig.Bin)
+		gocheck.Equal(t, "/tmp/etc", pconfig.Config)
+		gocheck.Equal(t, "", pconfig.Lib)
 
-		CheckEqualArr(t, []string{"/tmp/bin", "/tmp/alt/bin"}, paths)
+		gocheck.EqualArr(t, []string{"/tmp/bin", "/tmp/alt/bin"}, paths)
 	}
 }
